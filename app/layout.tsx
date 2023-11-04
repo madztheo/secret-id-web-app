@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
 import WagmiProvider from "@/providers/wagmi";
+import { SharedResourcesProvider } from "@/providers/ezkl";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <WagmiProvider>{children}</WagmiProvider>
+        <WagmiProvider>
+          <SharedResourcesProvider>{children}</SharedResourcesProvider>
+        </WagmiProvider>
       </body>
     </html>
   );

@@ -15,6 +15,20 @@ import { Hardfork } from "@ezkljs/verify";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import JSONBig from "json-bigint";
+import * as tf from "@tensorflow/tfjs";
+
+async function getDataBuffer(name: string): Promise<ArrayBuffer> {
+  // Helper function to fetch and create a file object from a public URL
+  const fetchAndCreateBuffer = async (path: string): Promise<ArrayBuffer> => {
+    const response = await fetch(path);
+    const buffer = await response.arrayBuffer();
+    return buffer;
+  };
+
+  // Fetch each sample file and create a File object
+  const buffer = await fetchAndCreateBuffer(`/data/${name}`);
+  return buffer;
+}
 
 export function readUploadedFileAsBuffer(file: File) {
   return new Promise<Uint8ClampedArray>((resolve, reject) => {
@@ -122,16 +136,16 @@ interface Uint8ArrayResult {
   executionTime: number;
 }
 
-export async function handleGenProofButton<T extends FileMapping>(files: T) {
-  const result = await convertFilesToFilesSer(files);
-
+export async function handleGenProofButton<T extends FileMapping>(
+  witness: Uint8ClampedArray
+) {
   const start = performance.now(); // Start the timer
 
   let output = prove(
-    result["data"],
-    result["pk"],
-    result["model"],
-    result["srs"]
+    witness,
+    new Uint8ClampedArray(await getDataBuffer("key.pk")),
+    new Uint8ClampedArray(await getDataBuffer("compiled_model.ezkl")),
+    new Uint8ClampedArray(await getDataBuffer("kzg.srs"))
   );
 
   const end = performance.now(); // End the timer
@@ -179,17 +193,24 @@ export async function handleGenElgamalDecryptionButton<T extends FileMapping>(
     executionTime: end - start,
   };
 }
-export async function handleGenWitnessButton<T extends FileMapping>(
-  files: T
+
+export async function handleGenWitnessButton(
+  input: tf.Tensor
 ): Promise<Uint8ArrayResult> {
-  const result = await convertFilesToFilesSer(files);
   const start = performance.now(); // Start the timer
+  const formattedInput = {
+    input_data: [input.flatten().arraySync()],
+  };
+  let output = genWitness(
+    new Uint8ClampedArray(await getDataBuffer("compiled_model.ezkl")),
+    new Uint8ClampedArray(
+      new TextEncoder().encode(JSON.stringify(formattedInput))
+    )
+  );
 
-  let output = genWitness(result["compiled_onnx"], result["input"]);
+  /*let witness = deserialize(output);
 
-  let witness = deserialize(output);
-
-  console.log(JSON.stringify(witness, null, 2));
+  console.log(JSON.stringify(witness, null, 2));*/
 
   const end = performance.now(); // End the timer
 

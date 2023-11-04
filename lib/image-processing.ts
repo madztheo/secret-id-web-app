@@ -1,6 +1,10 @@
+"use client";
 import getPixels from "get-pixels";
+import * as tf from "@tensorflow/tfjs";
 
-export async function transformImageIntoArray(file: any): Promise<number[]> {
+export async function transformImageIntoTensor(
+  file: any
+): Promise<tf.Tensor3D> {
   return new Promise((res, rej) => {
     getPixels(file, function (err, pixels) {
       if (err) {
@@ -20,7 +24,14 @@ export async function transformImageIntoArray(file: any): Promise<number[]> {
           convertedArray[i + 2]
         );
       }
-      res(alphaRemovedArray);
+      res(tf.tensor(alphaRemovedArray, [pixels.shape[0], pixels.shape[1], 3]));
     });
   });
+}
+
+export async function preprocessImage(file: any): Promise<tf.Tensor> {
+  const imageTensor = await transformImageIntoTensor(file);
+  const imageReshaped = tf.image.resizeBilinear(imageTensor, [28, 28]);
+  const grayScaleImage = tf.image.rgbToGrayscale(imageReshaped);
+  return grayScaleImage;
 }
