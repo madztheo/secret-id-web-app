@@ -136,9 +136,7 @@ interface Uint8ArrayResult {
   executionTime: number;
 }
 
-export async function handleGenProofButton<T extends FileMapping>(
-  witness: Uint8ClampedArray
-) {
+export async function handleGenProofButton(witness: Uint8ClampedArray) {
   const start = performance.now(); // Start the timer
 
   let output = prove(

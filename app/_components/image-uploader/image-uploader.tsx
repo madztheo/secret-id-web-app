@@ -35,6 +35,11 @@ export default function ImageUploader() {
 
   const onGenerateProof = async () => {
     const witness = await generateWitness();
+    const { output } = await utils.handleGenProofButton(
+      new Uint8ClampedArray(witness!)
+    );
+    const proof = engine.deserialize(output);
+    console.log("proof", proof);
   };
 
   return (

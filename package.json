@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ezkljs/engine": "^3.9.3",
+    "@ezkljs/engine": "^3.8.3",
     "@ezkljs/verify": "^0.0.8",
     "@tensorflow/tfjs": "^4.12.0",
     "browser-image-compression": "^2.0.2",
