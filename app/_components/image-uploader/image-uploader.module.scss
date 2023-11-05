@@ -1,3 +1,5 @@
+@import "@/app/constants.scss";
+
 .container {
   display: flex;
   align-items: center;
@@ -12,6 +14,26 @@
     max-width: 700px;
     word-wrap: break-word;
   }
-  .button {
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    .button {
+      background-color: $primaryColor;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: white;
+      cursor: pointer;
+      transition: 200ms ease;
+      font-size: 1.1rem;
+      font-weight: 500;
+      &:hover {
+        opacity: 0.9;
+      }
+      &:active {
+        transform: scale(0.99);
+      }
+    }
   }
 }
