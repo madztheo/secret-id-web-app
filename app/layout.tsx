@@ -19,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <WagmiProvider>
-          <SharedResourcesProvider>{children}</SharedResourcesProvider>
-        </WagmiProvider>
+        <SharedResourcesProvider>
+          <WagmiProvider>{children}</WagmiProvider>
+        </SharedResourcesProvider>
       </body>
     </html>
   );

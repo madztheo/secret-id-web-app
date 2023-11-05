@@ -1,3 +1,4 @@
+"use client";
 import {
   elgamalGenRandom,
   elgamalEncrypt,
@@ -16,6 +17,7 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import JSONBig from "json-bigint";
 import * as tf from "@tensorflow/tfjs";
+import { BigNumber } from "ethers";
 
 async function getDataBuffer(name: string): Promise<ArrayBuffer> {
   // Helper function to fetch and create a file object from a public URL
