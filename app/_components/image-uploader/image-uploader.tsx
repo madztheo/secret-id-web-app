@@ -4,6 +4,7 @@ import styles from "./image-uploader.module.scss";
 import { FileUploader } from "@/components/file-uploader/FileUploader";
 import { useRef, useState } from "react";
 import { useSharedResources } from "@/providers/ezkl";
+import { Button } from "@/components/button/Button";
 
 export default function ImageUploader() {
   const { engine, utils } = useSharedResources();
@@ -12,6 +13,8 @@ export default function ImageUploader() {
     file?: File | undefined;
     url: string;
   }>();
+  const [processingImage, setProcessingImage] = useState(false);
+  const [generatingProof, setGeneratingProof] = useState(false);
 
   const generateWitness = async () => {
     const imageTensor = await preprocessImage(file?.url);
@@ -29,17 +32,20 @@ export default function ImageUploader() {
 
   const onUpload = async () => {
     if (fileUploaderRef && fileUploaderRef.current) {
+      setProcessingImage(true);
       fileUploaderRef.current.click();
     }
   };
 
   const onGenerateProof = async () => {
+    setGeneratingProof(true);
     const witness = await generateWitness();
     const { output } = await utils.handleGenProofButton(
       new Uint8ClampedArray(witness!)
     );
     const proof = engine.deserialize(output);
     console.log("proof", proof);
+    setGeneratingProof(false);
   };
 
   return (
@@ -47,17 +53,26 @@ export default function ImageUploader() {
       <FileUploader
         onFileUploaded={(file) => {
           setFile(file);
+          setProcessingImage(false);
         }}
         inputRef={fileUploaderRef}
       />
       <div className={styles.buttons}>
-        <button className={styles.button} onClick={onUpload}>
-          Upload
-        </button>
+        <Button
+          className={styles.button}
+          text="Upload"
+          loading={processingImage}
+          loadingText="Uploading..."
+          onClick={onUpload}
+        />
         {file && (
-          <button className={styles.button} onClick={onGenerateProof}>
-            Generate proof
-          </button>
+          <Button
+            className={styles.button}
+            text="Generate proof"
+            loading={generatingProof}
+            loadingText="Generating..."
+            onClick={onGenerateProof}
+          />
         )}
       </div>
     </div>
