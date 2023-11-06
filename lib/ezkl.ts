@@ -273,18 +273,16 @@ interface VerifyResult {
   executionTime: number;
 }
 
-export async function handleVerifyButton<T extends FileMapping>(
-  files: T
+export async function handleVerifyButton(
+  proof: Uint8ClampedArray
 ): Promise<VerifyResult> {
-  const result = await convertFilesToFilesSer(files);
-
   const start = performance.now(); // Start the timer
 
   let output = verify(
-    result["proof"],
-    result["vk"],
-    result["settings"],
-    result["srs"]
+    proof,
+    new Uint8ClampedArray(await getDataBuffer("key.vk")),
+    new Uint8ClampedArray(await getDataBuffer("settings.json")),
+    new Uint8ClampedArray(await getDataBuffer("kzg.srs"))
   );
 
   const end = performance.now(); // End the timer

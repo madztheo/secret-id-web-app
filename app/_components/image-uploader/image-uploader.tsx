@@ -30,6 +30,13 @@ export default function ImageUploader() {
     }
   };
 
+  const verifyProof = async (proof: any) => {
+    // Transform the proof object into a Uint8ClampedArray
+    const convertedProof = engine.serialize(proof);
+    const verifRes = await utils.handleVerifyButton(convertedProof);
+    return verifRes;
+  };
+
   const onUpload = async () => {
     if (fileUploaderRef && fileUploaderRef.current) {
       setProcessingImage(true);
@@ -38,14 +45,20 @@ export default function ImageUploader() {
   };
 
   const onGenerateProof = async () => {
-    setGeneratingProof(true);
-    const witness = await generateWitness();
-    const { output } = await utils.handleGenProofButton(
-      new Uint8ClampedArray(witness!)
-    );
-    const proof = engine.deserialize(output);
-    console.log("proof", proof);
-    setGeneratingProof(false);
+    try {
+      setGeneratingProof(true);
+      const witness = await generateWitness();
+      const { output } = await utils.handleGenProofButton(
+        new Uint8ClampedArray(witness!)
+      );
+      const proof = engine.deserialize(output);
+      console.log("proof", proof);
+      const verifRes = await verifyProof(proof);
+      console.log("verifRes", verifRes);
+      setGeneratingProof(false);
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
 
   return (
