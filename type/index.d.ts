@@ -1,5 +1,4 @@
 import { BigNumber } from "ethers";
-import { StringOptions } from "sass";
 
 export type Proof = {
   instances: any;
@@ -31,5 +30,5 @@ export type Proof = {
     accumulator_indices: any[];
   };
   split: any;
-  transcript_type: StringOptions;
+  transcript_type: string;
 };
