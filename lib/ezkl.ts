@@ -25,7 +25,9 @@ async function getDataBuffer(name: string): Promise<ArrayBuffer> {
   };
 
   // Fetch each sample file and create a File object
-  const buffer = await fetchAndCreateBuffer(`/api/data/${name}`);
+  const buffer = await fetchAndCreateBuffer(
+    `https://wagmi-studio.fra1.cdn.digitaloceanspaces.com/secret-id/${name}`
+  );
   return buffer;
 }
 
