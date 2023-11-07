@@ -25,7 +25,7 @@ async function getDataBuffer(name: string): Promise<ArrayBuffer> {
   };
 
   // Fetch each sample file and create a File object
-  const buffer = await fetchAndCreateBuffer(`/data/${name}`);
+  const buffer = await fetchAndCreateBuffer(`/api/data/${name}`);
   return buffer;
 }
 
