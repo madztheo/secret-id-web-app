@@ -21,7 +21,7 @@ export default function ImageUploader() {
   const [prediction, setPrediction] = useState<number>(-1);
 
   const generateWitness = async () => {
-    const imageTensor = await preprocessImage(file?.file);
+    const imageTensor = await preprocessImage(file?.file!);
     try {
       const { output, executionTime } = await utils.handleGenWitnessButton(
         imageTensor

@@ -1,4 +1,3 @@
-"use client";
 import {
   elgamalGenRandom,
   elgamalEncrypt,
@@ -7,7 +6,6 @@ import {
   poseidonHash,
   verify,
   genWitness,
-  deserialize,
   genVk,
   genPk,
 } from "@ezkljs/engine/web";
@@ -16,8 +14,7 @@ import { Hardfork } from "@ezkljs/verify";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import JSONBig from "json-bigint";
-import * as tf from "@tensorflow/tfjs";
-import { BigNumber } from "ethers";
+import type { Tensor } from "@tensorflow/tfjs";
 
 async function getDataBuffer(name: string): Promise<ArrayBuffer> {
   // Helper function to fetch and create a file object from a public URL
@@ -195,7 +192,7 @@ export async function handleGenElgamalDecryptionButton<T extends FileMapping>(
 }
 
 export async function handleGenWitnessButton(
-  input: tf.Tensor
+  input: Tensor
 ): Promise<Uint8ArrayResult> {
   const start = performance.now(); // Start the timer
   const formattedInput = {
